@@ -1,12 +1,10 @@
 ﻿using Domain.Model;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using Microsoft.Extensions.Logging;
 
 namespace Context
 {
 
-    public class DxContext: DbContext
+    public class DxContext : DbContext
     {
         public DxContext(DbContextOptions<DxContext> options) : base(options) { }
 
@@ -22,9 +20,9 @@ namespace Context
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        { 
-        
-        
+        {
+
+
         }
 
         public DbSet<Usuario> Usuarios { get; set; }

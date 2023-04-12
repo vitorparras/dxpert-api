@@ -1,20 +1,19 @@
 ﻿using Domain.Enum;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Model
 {
-    public class Usuario
+    public class Usuario : BaseEntity
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
         public string? Nome { get; set; }
         public string? Email { get; set; }
         public string? Telefone { get; set; }
-        public TipoUsuario Permissao { get; set; }
 
+        public bool Ativo { get; set; } = true;
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime DataCriacao { get; set; }
+        public TipoUsuario Permissao { get; set; } = TipoUsuario.Normal;
+
+        [Required]
+        public string? Senha { get; set; }
     }
 }
