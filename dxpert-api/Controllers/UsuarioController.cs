@@ -1,43 +1,49 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+﻿using Domain.DTO.Request;
+using Domain.DTO.Response;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Service.Interfaces;
 
 namespace dxpert_api.Controllers
 {
-    [Route("api/[controller]")]
+
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class UsuarioController : ControllerBase
     {
-        // GET: api/<UsuarioController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly IUsuarioService _usuarioService;
+
+        public UsuarioController(IUsuarioService usuarioService)
         {
-            return new string[] { "value1", "value2" };
+            _usuarioService = usuarioService;
         }
 
-        // GET api/<UsuarioController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<UsuarioController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        [AllowAnonymous]
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
+            var token = await _usuarioService.LoginAsync(request.Email, request.Senha);
+
+            if (string.IsNullOrEmpty(token))
+            {
+                return Unauthorized("Usuário ou senha inválidos");
+            }
+
+            return Ok(new LoginResponse { Token = token });
         }
 
-        // PUT api/<UsuarioController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPost]
+        public async Task<IActionResult> Logout()
         {
-        }
+            if (Request.Headers.TryGetValue("Authorization", out var authorizationHeader))
+            {
+                var token = authorizationHeader.ToString().Replace("Bearer ", string.Empty);
+                await _usuarioService.LogoutAsync(token);
 
-        // DELETE api/<UsuarioController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+                return NoContent();
+            }
+
+            return BadRequest("Token não encontrado no cabeçalho 'Authorization'.");
         }
     }
 }

@@ -27,6 +27,8 @@ namespace Context
         }
 
         public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<AuthToken> AuthToken { get; set; }
+
         public DbSet<Endereco> Enderecos { get; set; }
         public DbSet<Documento> Documentos { get; set; }
         public DbSet<Cadastro> Cadastros { get; set; }

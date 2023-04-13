@@ -1,34 +1,43 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Service.Interfaces;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Middleware
 {
     public class JwtTokenValidationMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly IUsuarioService _usuarioService;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public JwtTokenValidationMiddleware(RequestDelegate next, IUsuarioService usuarioService)
+        public JwtTokenValidationMiddleware(RequestDelegate next, IServiceScopeFactory serviceScopeFactory)
         {
             _next = next;
-            _usuarioService = usuarioService;
+            _serviceScopeFactory = serviceScopeFactory;
         }
 
         public async Task Invoke(HttpContext context)
         {
-            var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-
-            var valid = await _usuarioService.TokenIsValid(token);
-
-            if (!string.IsNullOrEmpty(token) && valid)
+            if (context.Request.Path.Value.EndsWith("/Login", StringComparison.OrdinalIgnoreCase))
             {
                 await _next(context);
+                return;
             }
-            else
+
+            using var scope = _serviceScopeFactory.CreateScope();
+
+            var usuarioService = scope.ServiceProvider.GetRequiredService<IUsuarioService>();
+
+            var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+
+            var valid = await usuarioService.TokenIsValid(token);
+
+            if (string.IsNullOrEmpty(token) || !valid)
             {
                 context.Response.StatusCode = 401;
                 await context.Response.WriteAsync("Unauthorized");
             }
+            await _next(context);
         }
     }
 

@@ -1,4 +1,5 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using System.ComponentModel.DataAnnotations;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Domain.Model;
@@ -59,24 +60,40 @@ namespace Service
         public async Task<string> LoginAsync(string email, string senha)
         {
             var usuario = await _usuarioRepository
-                .FirstOrDefaultAsync(x => x.Ativo 
-                                && x.Email == email 
-                                && x.Senha == senha);
+                .FirstOrDefaultAsync(x => x.Ativo
+                                && x.Email.Contains(email)
+                                && x.Senha.Contains(senha));
 
-            return usuario == null ? null : GenerateJwtToken(usuario);
+            if (usuario != null)
+            {
+                var token = GenerateJwtToken(usuario);
+
+                if (token != null)
+                {
+                    var validTo = new JwtSecurityTokenHandler().ReadJwtToken(token).ValidTo;
+
+                    await _tokenRepository.AddAsync(new AuthToken
+                    {
+                        Token = token,
+                        ExpiryDate = validTo
+                    });
+                    return token;
+                }
+            }
+
+            return string.Empty;
         }
 
         public async Task LogoutAsync(string token)
         {
             var jwtToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
 
-            if (jwtToken.ValidTo > DateTime.UtcNow)
+            var tokenBd = await _tokenRepository.FirstOrDefaultAsync(x => x.Token == token);
+
+            if (tokenBd != null)
             {
-                var tokenInvalido = new AuthToken
-                {
-                    Token = token,
-                    ExpiryDate = jwtToken.ValidTo
-                };
+                tokenBd.ExpiryDate = DateTime.UtcNow.AddMinutes(-1);
+                await _tokenRepository.UpdateAsync(tokenBd);
             }
         }
 
