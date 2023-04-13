@@ -22,6 +22,8 @@ namespace Repository
 
         public async Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate) => await _dbSet.Where(predicate).ToListAsync();
 
+        public async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate) => await _dbSet.Where(predicate).FirstOrDefaultAsync();
+
         public async Task<int> SaveChangesAsync() => await _dbContext.SaveChangesAsync();
 
 
@@ -32,19 +34,17 @@ namespace Repository
             return entity;
         }
 
-        public async Task<TEntity> Update(TEntity entity)
+        public async Task<TEntity> UpdateAsync(TEntity entity)
         {
             _dbSet.Update(entity);
             await SaveChangesAsync();
             return entity;
         }
 
-        public async Task Remove(TEntity entity)
+        public async Task RemoveAsync(TEntity entity)
         {
             _dbSet.Remove(entity);
             await SaveChangesAsync();
         }
-
     }
-
 }
