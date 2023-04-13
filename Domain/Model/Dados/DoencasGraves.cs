@@ -3,8 +3,8 @@
     public class DoencasGraves : BaseEntity
     {
         public int Idade { get; set; }
-        public string? Essencial { get; set; }
-        public string? Plus { get; set; }
-        public string? Premium { get; set; }
+        public double Essencial { get; set; }
+        public double Plus { get; set; }
+        public double Premium { get; set; }
     }
 }

@@ -12,5 +12,7 @@ namespace Repository.Interface
         Task<TEntity> UpdateAsync(TEntity entity);
         Task RemoveAsync(TEntity entity);
         Task<int> SaveChangesAsync();
+
+        Task<TEntity> FromSqlRaw(string sql);
     }
 }

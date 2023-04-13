@@ -1,4 +1,6 @@
-﻿namespace Domain.Model
+﻿using Domain.Enum;
+
+namespace Domain.Model
 {
     public class Cadastro : BaseEntity
     {
@@ -12,7 +14,7 @@
         public string? Categoria { get; set; }
         public string? PoliticamenteExposto { get; set; }
         public string? PresidenteNoBrasil { get; set; }
-        public string? RendaBruta { get; set; }
+        public double RendaBruta { get; set; }
         public string? DespesaMensal { get; set; }
         public string? ObrigacoesFiscaisExterior { get; set; }
         public string? ImpostoDeRenda { get; set; }
@@ -34,10 +36,10 @@
         public string? FilhosMaiores { get; set; }
         public string? Nome { get; set; }
         public DateTime? DataNasc { get; set; }
-        public string? Sexo { get; set; }
+        public Sexo? Sexo { get; set; }
         public string? Celular { get; set; }
-        public string? QuantidadeFilhosMaiores { get; set; }
-        public string? AnosContribuicao { get; set; }
+        public int QuantidadeFilhosMaiores { get; set; }
+        public int AnosContribuicao { get; set; }
         public string? DataPosse { get; set; }
         public string? Profissao { get; set; }
         public string? RegimeContratacao { get; set; }

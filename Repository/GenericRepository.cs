@@ -1,5 +1,7 @@
 ﻿using Context;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using MySqlConnector;
 using Repository.Interface;
 using System.Linq.Expressions;
 
@@ -8,7 +10,7 @@ namespace Repository
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
     {
         private readonly DxContext _dbContext;
-        private readonly DbSet<TEntity> _dbSet;
+        public readonly DbSet<TEntity> _dbSet;
 
         public GenericRepository(DxContext dbContext)
         {
@@ -45,6 +47,11 @@ namespace Repository
         {
             _dbSet.Remove(entity);
             await SaveChangesAsync();
+        }
+
+        public async Task<TEntity> FromSqlRaw(string sql)
+        {
+            return await _dbSet.FromSqlRaw(sql).FirstOrDefaultAsync();
         }
     }
 }
