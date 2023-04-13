@@ -24,7 +24,7 @@ namespace Service
 
         private readonly IGenericRepository<DitMedicos> _DitMedicosRepository;
         private readonly IGenericRepository<VidaInteira> _VidaInteiraRepository;
-        private readonly IGenericRepository<Cadastro> _CadastroInteiraRepository;
+        private readonly IGenericRepository<Cadastro> _CadastroRepository;
         private readonly IGenericRepository<InvalidezAcidenteMajorada> _InvalidezAcidenteMajoradaRepository;
         private readonly IGenericRepository<InvalidezTotalAcidente> _InvalidezTotalAcidenteRepository;
         private readonly IGenericRepository<DoencasGraves> _DoencasGravesRepository;
@@ -155,7 +155,7 @@ namespace Service
 
             if (descricao == "TERM LIFE")
             {
-                double valor = CalcularTermLife(TempoContribuicao, idade, cadastro);
+                double valor = await CalcularTermLife(TempoContribuicao, idade, cadastro);
 
                 double resultado;
                 if (idade <= 50)
@@ -169,31 +169,31 @@ namespace Service
             return 0;
         }
 
-        public static List<Dictionary<string, string>> RecuperarInformacoesProduto(Cadastro cadastro, List<Dictionary<string, string>> produtos, Dictionary<string, string> termLife, string id)
+        public async Task<List<Dictionary<string, string>>> RecuperarInformacoesProduto(List<Dictionary<string, string>> dados, List<Dictionary<string, string>> produtos, int termLife, int id)
         {
-            Dictionary<string, string> dadosCadastro = RecuperarDadosCadastro(id);
+            var dadosCadastro = await _CadastroRepository.FirstOrDefaultAsync(x => x.Id == id);
 
-            List<Dictionary<string, string>> ProdutosProntos = new List<Dictionary<string, string>>();
+            var ProdutosProntos = new List<Dictionary<string, string>>();
 
             Dictionary<string, Dictionary<string, string>> lista = new Dictionary<string, Dictionary<string, string>>()
-    {
-        {"SEGURO DE VIDA", new Dictionary<string, string>() {{"codigo", "1546"}, {"Recuperacao", "Pensão por Morte"}}},
-        {"INVALIDEZ MAJORADA", new Dictionary<string, string>() {{"codigo", "2278"}, {"Recuperacao", "Invalidez"}}},
-        {"INVALIDEZ TOTAL", new Dictionary<string, string>() {{"codigo", "548"}, {"Recuperacao", "Invalidez"}}},
-        {"DOENÇAS GRAVES", new Dictionary<string, string>() {{"codigo", "2230"}, {"Recuperacao", "Invalidez"}}},
-        {"DOENÇAS GRAVES MASTER", new Dictionary<string, string>() {{"codigo", "2345"}, {"Recuperacao", "Invalidez"}}},
-        {"PENSÃO POR MORTE", new Dictionary<string, string>() {{"codigo", "2390"}, {"Recuperacao", "Pensão por Morte"}}},
-        {"TERM LIFE", new Dictionary<string, string>() {{"codigo", "2395"}, {"Recuperacao", "Pensão por Morte"}}}
-    };
+            {
+                {"SEGURO DE VIDA", new Dictionary<string, string>() {{"codigo", "1546"}, {"Recuperacao", "Pensão por Morte"}}},
+                {"INVALIDEZ MAJORADA", new Dictionary<string, string>() {{"codigo", "2278"}, {"Recuperacao", "Invalidez"}}},
+                {"INVALIDEZ TOTAL", new Dictionary<string, string>() {{"codigo", "548"}, {"Recuperacao", "Invalidez"}}},
+                {"DOENÇAS GRAVES", new Dictionary<string, string>() {{"codigo", "2230"}, {"Recuperacao", "Invalidez"}}},
+                {"DOENÇAS GRAVES MASTER", new Dictionary<string, string>() {{"codigo", "2345"}, {"Recuperacao", "Invalidez"}}},
+                {"PENSÃO POR MORTE", new Dictionary<string, string>() {{"codigo", "2390"}, {"Recuperacao", "Pensão por Morte"}}},
+                {"TERM LIFE", new Dictionary<string, string>() {{"codigo", "2395"}, {"Recuperacao", "Pensão por Morte"}}}
+            };
 
             if (dados == null || dados.Count == 0)
             {
                 dados = new List<Dictionary<string, string>>()
-        {
-            new Dictionary<string, string>() {{"Nome", "TERM LIFE"}, {"Capital", "0"}},
-            new Dictionary<string, string>() {{"Nome", "DOENÇAS GRAVES"}, {"Capital", "0"}},
-            new Dictionary<string, string>() {{"Nome", "INVALIDEZ MAJORADA"}, {"Capital", "0"}}
-        };
+                {
+                    new Dictionary<string, string>() {{"Nome", "TERM LIFE"}, {"Capital", "0"}},
+                    new Dictionary<string, string>() {{"Nome", "DOENÇAS GRAVES"}, {"Capital", "0"}},
+                    new Dictionary<string, string>() {{"Nome", "INVALIDEZ MAJORADA"}, {"Capital", "0"}}
+                };
             }
             foreach (Dictionary<string, string> dado in dados)
             {
@@ -215,17 +215,11 @@ namespace Service
                 Procentagem = Procentagem * 100;
                 Procentagem = Math.Round(Procentagem);
 
-                int idade = CalculaIdade(dadosCadastro["DataNasc"]);
-                string perso = CalcularPersonalizacao(dadosCadastro, dado["Nome"], idade, termLife).Replace(",", ".");
-                double investimento;
-                if (perso != "x" && perso != "")
-                {
-                    investimento = Convert.ToDouble(perso) * Convert.ToDouble(valorFormatado) / 1000;
-                }
-                else
-                {
-                    investimento = 0;
-                }
+                int idade = CalcularIdade(dadosCadastro.DataNasc);
+                var perso = await CalcularPersonalizacao(dadosCadastro, dado["Nome"], idade, termLife);
+
+                var valorFormatadoInt = Convert.ToDouble(valorFormatado);
+                var investimento = perso * valorFormatadoInt / 1000;
 
                 ProdutosProntos.Add(new Dictionary<string, string>
                 {
@@ -241,44 +235,37 @@ namespace Service
             return ProdutosProntos;
         }
 
-        public async double CalcularPersonalizacao(Cadastro cadastro, string produto, int idade, int termLife)
+        public async Task<double> CalcularPersonalizacao(Cadastro cadastro, string produto, int idade, int termLife)
         {
             switch (produto)
             {
                 case "SEGURO DE VIDA":
-                    if (cadastro.Sexo == Sexo.Feminino)
-                    {
-                        var registro = RecuperarvidaInteria(idade);
-                        return registro["Mulher"];
-                    }
-                    else
-                    {
-                        var registro = RecuperarvidaInteria(idade);
-                        return registro["Homem"];
-                    }
+                    var registro = await _VidaInteiraRepository.FirstOrDefaultAsync(x => x.Idade == idade);
+                    return cadastro.Sexo == Sexo.Feminino ? registro.Mulher : registro.Homem;
 
                 case "INVALIDEZ MAJORADA":
-                    var invalidezMajorada = RecuperarInvalidezAcidenteMajorada(idade);
-                    return invalidezMajorada;
+                    var invalidezMajorada = await _InvalidezAcidenteMajoradaRepository.FirstOrDefaultAsync(x => x.Idade == idade);
+                    return invalidezMajorada.Valor;
 
                 case "INVALIDEZ TOTAL":
-                    var invalidezTotal = RecuperarInvalidezTotalPorAcidente(idade);
-                    return invalidezTotal;
+                    var invalidezTotal = await _InvalidezTotalAcidenteRepository.FirstOrDefaultAsync(x => x.Idade == idade);
+                    return invalidezTotal.Valor;
 
                 case "DOENÇAS GRAVES":
-                    var doencasGraves = RecuperarDoencasGraves(idade);
-                    if (doencasGraves == false)
+                    var doencasGraves = await _DoencasGravesRepository.FirstOrDefaultAsync(x => x.Idade == idade);
+                    if (doencasGraves != null)
                     {
-                        return 0;
+                        return doencasGraves.Plus;
                     }
-                    return double.Parse(doencasGraves["Plus"].Replace(',', '.'));
+                    return 0;
 
                 case "DOENÇAS GRAVES MASTER":
-                    return RecuperarDoencasGravesMaster(idade);
+                    var doencasGravesMaster = await _DoencasGravesMasterRepository.FirstOrDefaultAsync(x => x.Idade == idade);
+                    return doencasGravesMaster.Valor;
 
                 case "PENSÃO POR MORTE":
-                    var pensaoPorMorte = RecuperarPensaoPorMorte(idade);
-                    return pensaoPorMorte["I10"];
+                    var pensaoPorMorte = await _PensaoPorMorteRepository.FirstOrDefaultAsync(x => x.Idade == idade);
+                    return pensaoPorMorte.I10;
 
                 case "TERM LIFE":
                     return await CalcularTermLife(termLife, idade, cadastro);
@@ -415,7 +402,7 @@ namespace Service
             else
             {
                 int filhosMenores = cadastro.QuantidadeFilhosMaiores;
-                
+
                 if (cadastro.EstadoCivil == "Solteiro" && filhosMenores == 0)
                 {
                     return 0;

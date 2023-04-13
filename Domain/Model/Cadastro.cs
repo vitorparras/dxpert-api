@@ -35,7 +35,7 @@ namespace Domain.Model
         public string? QuantidadeFilhos { get; set; }
         public string? FilhosMaiores { get; set; }
         public string? Nome { get; set; }
-        public DateTime? DataNasc { get; set; }
+        public DateTime DataNasc { get; set; }
         public Sexo? Sexo { get; set; }
         public string? Celular { get; set; }
         public int QuantidadeFilhosMaiores { get; set; }

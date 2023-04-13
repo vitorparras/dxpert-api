@@ -7,5 +7,4 @@
         public double I15 { get; set; }
         public double I20 { get; set; }
     }
-
 }
