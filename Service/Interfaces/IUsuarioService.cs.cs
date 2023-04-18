@@ -1,16 +1,18 @@
-﻿using Domain.Model;
+﻿using Domain.DTO.Request;
+using Domain.DTO.Response;
+using Domain.Model;
 
 namespace Service.Interfaces
 {
     public interface IUsuarioService
     {
-        Task<IEnumerable<Usuario>> GetAllAsync();
-        Task<Usuario> GetByIdAsync(int id);
-        Task<Usuario> AddAsync(Usuario usuario);
-        Task UpdateAsync(Usuario usuario);
+        Task<IEnumerable<UsuarioResponse>> GetAllAsync();
+        Task<UsuarioResponse> GetByIdAsync(int id);
+        Task<UsuarioResponse> AddAsync(UsuarioRequest usuario);
+        Task<UsuarioResponse> UpdateAsync(UsuarioRequest usuario);
         Task DeleteAsync(int id);
         Task LogoutAsync(string token);
         Task<bool> TokenIsValid(string token);
-        Task<string> LoginAsync(string email, string senha);
+        Task<LoginResponse> LoginAsync(string email, string senha);
     }
 }

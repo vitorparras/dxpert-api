@@ -2,6 +2,8 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Domain.DTO.Request;
+using Domain.DTO.Response;
 using Domain.Model;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -27,37 +29,88 @@ namespace Service
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
-        public async Task<IEnumerable<Usuario>> GetAllAsync()
+        public async Task<IEnumerable<UsuarioResponse>> GetAllAsync()
         {
-            return await _usuarioRepository.GetAllAsync();
+            var result = await _usuarioRepository.GetAllAsync();
+            return result.Select(x => new UsuarioResponse()
+            {
+                Email = x.Email,
+                Id = x.Id,
+                Nome = x.Nome,
+                Permissao = x.Permissao,
+                Telefone = x.Telefone
+            }).ToList();
         }
 
-        public async Task<Usuario> GetByIdAsync(int id)
+        public async Task<UsuarioResponse> GetByIdAsync(int id)
         {
-            return await _usuarioRepository.GetByIdAsync(id);
+            var result = await _usuarioRepository.GetByIdAsync(id);
+            return new UsuarioResponse()
+            {
+                Email = result.Email,
+                Id = result.Id,
+                Nome = result.Nome,
+                Permissao = result.Permissao,
+                Telefone = result.Telefone
+            };
         }
 
-        public async Task<Usuario> AddAsync(Usuario usuario)
+        public async Task<UsuarioResponse> AddAsync(UsuarioRequest usuario)
         {
-            await _usuarioRepository.AddAsync(usuario);
-            return usuario;
+           var user = await _usuarioRepository.AddAsync( new Usuario()
+            {
+                Telefone= usuario.Telefone,
+                Permissao= usuario.Permissao,
+                Nome= usuario.Nome,
+                Senha= usuario.Senha,
+                Email= usuario.Email,
+            });
+
+            return new UsuarioResponse()
+            {
+                Email = user.Email,
+                Id = user.Id,
+                Nome = user.Nome,
+                Permissao = user.Permissao,
+                Telefone = user.Telefone
+            };
         }
 
-        public async Task UpdateAsync(Usuario usuario)
+        public async Task<UsuarioResponse> UpdateAsync(UsuarioRequest usuario)
         {
-            await _usuarioRepository.UpdateAsync(usuario);
+            var userExistente = await _usuarioRepository.GetByIdAsync(usuario.Id);
+
+            if (userExistente != null)
+            {
+                userExistente.Senha = usuario.Senha;
+                userExistente.Permissao = usuario.Permissao;
+                userExistente.Telefone = usuario.Telefone;
+                userExistente.Email = usuario.Email;
+                userExistente.Nome = usuario.Nome;
+
+                userExistente = await _usuarioRepository.UpdateAsync(userExistente);
+            }
+
+            return new UsuarioResponse()
+            {
+                Email = userExistente.Email,
+                Id = userExistente.Id,
+                Nome = userExistente.Nome,
+                Permissao = userExistente.Permissao,
+                Telefone = userExistente.Telefone
+            };
         }
 
         public async Task DeleteAsync(int id)
         {
-            var user = await GetByIdAsync(id);
+            var user = await _usuarioRepository.GetByIdAsync(id);
             if (user != null)
             {
                 await _usuarioRepository.RemoveAsync(user);
             }
         }
 
-        public async Task<string> LoginAsync(string email, string senha)
+        public async Task<LoginResponse> LoginAsync(string email, string senha)
         {
             var usuario = await _usuarioRepository
                 .FirstOrDefaultAsync(x => x.Ativo
@@ -77,11 +130,23 @@ namespace Service
                         Token = token,
                         ExpiryDate = validTo
                     });
-                    return token;
+                    return new LoginResponse()
+                    {
+                        IdUser = usuario.Id,
+                        Token = token,
+                        Nome = usuario.Nome,
+                        Mensagem = "Usuario Validado Com Sucesso",
+                        Sucesso = true
+                    };
+
                 }
             }
 
-            return string.Empty;
+            return new LoginResponse()
+            {
+                Mensagem = "Usuario Informado Invalido",
+                Sucesso = false
+            };
         }
 
         public async Task LogoutAsync(string token)
