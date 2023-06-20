@@ -45,25 +45,29 @@ namespace Service
         public async Task<UsuarioResponse> GetByIdAsync(int id)
         {
             var result = await _usuarioRepository.GetByIdAsync(id);
-            return new UsuarioResponse()
+            if (result != null)
             {
-                Email = result.Email,
-                Id = result.Id,
-                Nome = result.Nome,
-                Permissao = result.Permissao,
-                Telefone = result.Telefone
-            };
+                return new UsuarioResponse()
+                {
+                    Email = result.Email,
+                    Id = result.Id,
+                    Nome = result.Nome,
+                    Permissao = result.Permissao,
+                    Telefone = result.Telefone
+                };
+            }
+            return null;
         }
 
         public async Task<UsuarioResponse> AddAsync(UsuarioRequest usuario)
         {
-           var user = await _usuarioRepository.AddAsync( new Usuario()
+            var user = await _usuarioRepository.AddAsync(new Usuario()
             {
-                Telefone= usuario.Telefone,
-                Permissao= usuario.Permissao,
-                Nome= usuario.Nome,
-                Senha= usuario.Senha,
-                Email= usuario.Email,
+                Telefone = usuario.Telefone,
+                Permissao = usuario.Permissao,
+                Nome = usuario.Nome,
+                Senha = usuario.Senha,
+                Email = usuario.Email,
             });
 
             return new UsuarioResponse()

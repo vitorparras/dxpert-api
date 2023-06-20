@@ -3,6 +3,7 @@ using System;
 using Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Context.Migrations
 {
     [DbContext(typeof(DxContext))]
-    partial class DxContextModelSnapshot : ModelSnapshot
+    [Migration("20230511232205_AlterandoCadastro")]
+    partial class AlterandoCadastro
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -120,9 +123,6 @@ namespace Context.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("EstadoCivil")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Etapa")
                         .HasColumnType("longtext");
 
                     b.Property<string>("FilhosMaiores")
@@ -233,32 +233,6 @@ namespace Context.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Cadastros");
-                });
-
-            modelBuilder.Entity("Domain.Model.Configuracoes", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DataAlteracao")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime>("DataCriacao")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Nome")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Valor")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Configuracoes");
                 });
 
             modelBuilder.Entity("Domain.Model.Dados.AdicionalDiariaInternacaoHospitalar", b =>

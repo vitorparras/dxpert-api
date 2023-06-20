@@ -215,7 +215,7 @@ namespace Service
                 Procentagem = Procentagem * 100;
                 Procentagem = Math.Round(Procentagem);
 
-                int idade = CalcularIdade(dadosCadastro.DataNasc);
+                int idade = CalcularIdade(dadosCadastro.DataNascimento);
                 var perso = await CalcularPersonalizacao(dadosCadastro, dado["Nome"], idade, termLife);
 
                 var valorFormatadoInt = Convert.ToDouble(valorFormatado);
