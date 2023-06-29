@@ -5,6 +5,6 @@ namespace Service.Interfaces
     public interface IConfiguracaoService
     {
         Task<IEnumerable<Configuracoes>> GetAll();
-        void Update(int id, string value);
+        Task Update(int id, string value);
     }
 }

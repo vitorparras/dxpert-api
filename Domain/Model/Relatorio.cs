@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.DTO.Calculos;
 
 namespace Domain.Model
 {
@@ -95,6 +96,10 @@ namespace Domain.Model
         public string? TotalInvestidoEmSegurosDuranteEssePeriodo { get; set; }
 
         public bool? Ativo { get; set; }
+
+
+        public List<ProdutoSugestaoParaRecuperarDTO>? ProdutosSugestaoParaRecuperar { get; set; }
+
 
 
         [ForeignKey("Cadastro")]

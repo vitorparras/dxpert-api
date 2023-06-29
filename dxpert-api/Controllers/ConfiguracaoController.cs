@@ -16,17 +16,17 @@ namespace dxpert_api.Controllers
         }
 
         [HttpGet]
-        public Task<IEnumerable<Configuracoes>> GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            return _service.GetAll();
+            return Ok(await _service.GetAll());
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] string value)
+        [HttpPut()]
+        public async Task<IActionResult> Update([FromBody] Configuracoes config)
         {
             try
             {
-                _service.Update(id, value);
+                await _service.Update(config.Id, config.Valor);
                 return Ok();
             }
             catch (ArgumentException e)

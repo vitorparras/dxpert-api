@@ -58,6 +58,14 @@ namespace dxpert_api.Controllers
                 Mensagem = mensagem,
                 Sucesso = true
             });
+        } 
+        
+        
+        [HttpGet]
+        public async Task<IActionResult> Acompanhamentos(int? idUser)
+        {
+            var data = await _cadastroService.ListAcompanhamentos(idUser);
+            return Ok(data);
         }
     }
 }

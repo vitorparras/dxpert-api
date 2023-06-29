@@ -3,6 +3,7 @@
     public class Configuracoes : BaseEntity
     {
         public string? Nome { get; set; }
+        public string? Tipo { get; set; }
         public string? Valor { get; set; }
     }
 }

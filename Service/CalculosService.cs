@@ -4,6 +4,7 @@ using Domain.Model;
 using Domain.Model.Dados;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Repository.Interface;
+using Service.Interfaces;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,11 +19,30 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Service
 {
-    public class CalculosService
+    public class CalculosService : ICalculosService
     {
-        public CalculosService() { }
+        public CalculosService(IGenericRepository<DitMedico> ditMedicosRepository,
+            IGenericRepository<VidaInteira> vidaInteiraRepository,
+            IGenericRepository<Cadastro> cadastroRepository,
+            IGenericRepository<InvalidezAcidenteMajorada> invalidezAcidenteMajoradaRepository,
+            IGenericRepository<InvalidezTotalAcidente> invalidezTotalAcidenteRepository,
+            IGenericRepository<DoencasGraves> doencasGravesRepository,
+            IGenericRepository<DoencasGravesMaster> doencasGravesMasterRepository,
+            IGenericRepository<PensaoPorMorte> pensaoPorMorteRepository,
+            IGenericRepository<TermLife> termLifeRepository)
+        {
+            _DitMedicosRepository = ditMedicosRepository;
+            _VidaInteiraRepository = vidaInteiraRepository;
+            _CadastroRepository = cadastroRepository;
+            _InvalidezAcidenteMajoradaRepository = invalidezAcidenteMajoradaRepository;
+            _InvalidezTotalAcidenteRepository = invalidezTotalAcidenteRepository;
+            _DoencasGravesRepository = doencasGravesRepository;
+            _DoencasGravesMasterRepository = doencasGravesMasterRepository;
+            _PensaoPorMorteRepository = pensaoPorMorteRepository;
+            _TermLifeRepository = termLifeRepository;
+        }
 
-        private readonly IGenericRepository<DitMedicos> _DitMedicosRepository;
+        private readonly IGenericRepository<DitMedico> _DitMedicosRepository;
         private readonly IGenericRepository<VidaInteira> _VidaInteiraRepository;
         private readonly IGenericRepository<Cadastro> _CadastroRepository;
         private readonly IGenericRepository<InvalidezAcidenteMajorada> _InvalidezAcidenteMajoradaRepository;
@@ -78,95 +98,98 @@ namespace Service
 
         public async Task<double> CalcularSugestaoDeProdutos(Cadastro cadastro, string descricao, int idade, double NaPensaoPorMorte, double NaInvalidez, int IdadeMinimaAposentar, int TempoContribuicao)
         {
-            if (descricao == "SEGURO DE VIDA")
-            {
-                var registro = await _VidaInteiraRepository.FirstOrDefaultAsync(x => x.Idade == idade);
+           
+                Double.TryParse(cadastro.RendaBruta, out var renda);
+                if (descricao == "SEGURO DE VIDA")
+                {
+                    var registro = await _VidaInteiraRepository.FirstOrDefaultAsync(x => x.Idade == idade);
 
-                if (cadastro.Sexo == Sexo.Feminino)
-                {
-                    return registro.Mulher;
+                    if (cadastro.Sexo == Sexo.Feminino)
+                    {
+                        return registro.Mulher;
+                    }
+                    else
+                    {
+                        double resultado;
+                        if (idade <= 50)
+                            resultado = NaPensaoPorMorte * 240;
+                        else
+                            resultado = NaPensaoPorMorte * 120;
+
+                        return (registro.Homem * resultado / 1000);
+                    }
                 }
-                else
+
+                if (descricao == "INVALIDEZ MAJORADA")
                 {
+                    double resultado;
+                    if (idade <= 50)
+                        resultado = NaInvalidez * 240;
+                    else
+                        resultado = NaInvalidez * 180;
+
+                    var registro = await _InvalidezAcidenteMajoradaRepository.FirstOrDefaultAsync(x => x.Idade == idade);
+                    return (registro.Valor * resultado / 1000);
+                }
+
+                if (descricao == "INVALIDEZ TOTAL ")
+                {
+                    double resultado;
+                    if (cadastro.Ocupacao == "Aposentado(a)")
+                        resultado = renda * 0.40 * 120;
+                    else if (idade <= 50)
+                        resultado = NaInvalidez * 240;
+                    else
+                        resultado = NaInvalidez * 180;
+
+                    var registro = await _InvalidezTotalAcidenteRepository.FirstOrDefaultAsync(x => x.Idade == idade);
+
+                    return (registro.Valor * resultado / 1000);
+                }
+
+                if (descricao == "DOENÇAS GRAVES")
+                {
+                    var registro = await _DoencasGravesRepository.FirstOrDefaultAsync(x => x.Idade == idade);
+                    double capital = (idade <= 50) ? 200000 : 100000;
+                    return (registro.Plus * capital / 1000);
+                }
+
+                if (descricao == "DOENÇAS GRAVES MASTER")
+                {
+                    if (cadastro.Ocupacao != "Aposentado(a)")
+                    {
+                        return 0;
+                    }
+
+                    var registro = await _DoencasGravesMasterRepository.FirstOrDefaultAsync(x => x.Idade == idade);
+                    double capital = (IdadeMinimaAposentar <= 50) ? 200000 : 100000;
+                    return (registro.Valor * capital) / 1000;
+                }
+
+                if (descricao == "PENSÃO POR MORTE")
+                {
+                    if (cadastro.Ocupacao == "Aposentado(a)")
+                    {
+                        var registro = await _PensaoPorMorteRepository.FirstOrDefaultAsync(x => x.Idade == idade);
+                        return registro.I10 * renda * 0.20 / 1000;
+                    }
+                }
+
+                if (descricao == "TERM LIFE")
+                {
+                    double valor = await CalcularTermLife(TempoContribuicao, idade, cadastro);
+
                     double resultado;
                     if (idade <= 50)
                         resultado = NaPensaoPorMorte * 240;
                     else
                         resultado = NaPensaoPorMorte * 120;
 
-                    return (registro.Homem * resultado / 1000);
-                }
-            }
-
-            if (descricao == "INVALIDEZ MAJORADA")
-            {
-                double resultado;
-                if (idade <= 50)
-                    resultado = NaInvalidez * 240;
-                else
-                    resultado = NaInvalidez * 180;
-
-                var registro = await _InvalidezAcidenteMajoradaRepository.FirstOrDefaultAsync(x => x.Idade == idade);
-                return (registro.Valor * resultado / 1000);
-            }
-
-            if (descricao == "INVALIDEZ TOTAL ")
-            {
-                double resultado;
-                if (cadastro.Ocupacao == "Aposentado(a)")
-                    resultado = cadastro.RendaBruta * 0.40 * 120;
-                else if (idade <= 50)
-                    resultado = NaInvalidez * 240;
-                else
-                    resultado = NaInvalidez * 180;
-
-                var registro = await _InvalidezTotalAcidenteRepository.FirstOrDefaultAsync(x => x.Idade == idade);
-
-                return (registro.Valor * resultado / 1000);
-            }
-
-            if (descricao == "DOENÇAS GRAVES")
-            {
-                var registro = await _DoencasGravesRepository.FirstOrDefaultAsync(x => x.Idade == idade);
-                double capital = (idade <= 50) ? 200000 : 100000;
-                return (registro.Plus * capital / 1000);
-            }
-
-            if (descricao == "DOENÇAS GRAVES MASTER")
-            {
-                if (cadastro.Ocupacao != "Aposentado(a)")
-                {
-                    return 0;
+                    return ((valor * resultado) / 1000);
                 }
 
-                var registro = await _DoencasGravesMasterRepository.FirstOrDefaultAsync(x => x.Idade == idade);
-                double capital = (IdadeMinimaAposentar <= 50) ? 200000 : 100000;
-                return (registro.Valor * capital) / 1000;
-            }
-
-            if (descricao == "PENSÃO POR MORTE")
-            {
-                if (cadastro.Ocupacao == "Aposentado(a)")
-                {
-                    var registro = await _PensaoPorMorteRepository.FirstOrDefaultAsync(x => x.Idade == idade);
-                    return registro.I10 * cadastro.RendaBruta * 0.20 / 1000;
-                }
-            }
-
-            if (descricao == "TERM LIFE")
-            {
-                double valor = await CalcularTermLife(TempoContribuicao, idade, cadastro);
-
-                double resultado;
-                if (idade <= 50)
-                    resultado = NaPensaoPorMorte * 240;
-                else
-                    resultado = NaPensaoPorMorte * 120;
-
-                return ((valor * resultado) / 1000);
-            }
-
-            return 0;
+                return 0;
+            
         }
 
         public async Task<List<Dictionary<string, string>>> RecuperarInformacoesProduto(List<Dictionary<string, string>> dados, List<Dictionary<string, string>> produtos, int termLife, int id)
@@ -215,7 +238,7 @@ namespace Service
                 Procentagem = Procentagem * 100;
                 Procentagem = Math.Round(Procentagem);
 
-                int idade = CalcularIdade(dadosCadastro.DataNascimento);
+                int idade = CalcularIdade(dadosCadastro.DataNascimento ?? DateTime.MinValue);
                 var perso = await CalcularPersonalizacao(dadosCadastro, dado["Nome"], idade, termLife);
 
                 var valorFormatadoInt = Convert.ToDouble(valorFormatado);
@@ -466,32 +489,9 @@ namespace Service
             }
         }
 
-        public double CalcularRegimeContratacao(Cadastro cadastro, double RendaHoje)
-        {
-            if (cadastro.RegimeContratacao == "Integralidade")
-            {
-                return RendaHoje;
-            }
 
-            if (cadastro.RegimeContratacao == "Limitado ao teto do INSS")
-            {
-                double baseTetoINSS = 6433.57;
-                double total = (RendaHoje * 0.70 > baseTetoINSS) ?
-                    baseTetoINSS * 0.80 :
-                    RendaHoje * 0.70;
-                return total;
-            }
 
-            if (cadastro.RegimeContratacao == "Proporcionalidade")
-            {
-                double total = RendaHoje * 0.80;
-                return total;
-            }
-
-            return 0;
-        }
-
-        public static int CalcularIdade(DateTime dataDeNascimento)
+        public int CalcularIdade(DateTime dataDeNascimento)
         {
             DateTime hoje = DateTime.Today;
             int idade = hoje.Year - dataDeNascimento.Year;
@@ -667,5 +667,36 @@ namespace Service
             var v2 = CalcularInvalidezMorte(idade, valorMorte, "Morte");
             return v1 + v2;
         }
+
+        // metodos prontos
+
+        public double CalcularRegimeContratacao(Cadastro cadastro, double RendaHoje)
+        {
+            if (cadastro.RegimeContratacao == "Integralidade")
+            {
+                return RendaHoje;
+            }
+
+            if (cadastro.RegimeContratacao == "Limitado ao teto do INSS")
+            {
+                double baseTetoINSS = 6433.57;
+                double total = (RendaHoje * 0.70 > baseTetoINSS) ?
+                    baseTetoINSS * 0.80 :
+                    RendaHoje * 0.70;
+                return total;
+            }
+
+            if (cadastro.RegimeContratacao == "Proporcionalidade")
+            {
+                double total = RendaHoje * 0.80;
+                return total;
+            }
+
+            return 0;
+        }
+
+
+
+
     }
 }

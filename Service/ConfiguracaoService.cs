@@ -4,19 +4,23 @@ using Service.Interfaces;
 
 namespace Service
 {
-    internal class ConfiguracaoService : IConfiguracaoService
+    public class ConfiguracaoService : IConfiguracaoService
     {
         private readonly IGenericRepository<Configuracoes> _ConfigRepository;
 
+        public ConfiguracaoService(IGenericRepository<Configuracoes> configRepository)
+        {
+            _ConfigRepository = configRepository ?? throw new ArgumentNullException(nameof(configRepository));
+        }
 
         public async Task<IEnumerable<Configuracoes>> GetAll()
         {
             return await _ConfigRepository.GetAllAsync();
         }
 
-        public async void Update(int id, string value)
+        public async Task Update(int id, string value)
         {
-            var configuracao = await _ConfigRepository.GetByIdAsync(id);
+            var configuracao = await _ConfigRepository.FirstOrDefaultAsync(x=>x.Id == id);
 
             if (configuracao != null)
             {

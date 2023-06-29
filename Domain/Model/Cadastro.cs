@@ -9,15 +9,15 @@ namespace Domain.Model
         public string? Email { get; set; }
         public string? EstadoCivil { get; set; }
         public DateTime? DataCasamento { get; set; }
-        public string? NomeConjuge { get; set; }
-        public DateTime? DataNascConjuge { get; set; }
+        public string? ConjugeNome { get; set; }
+        public DateTime? ConjugeDataNasc { get; set; }
         public bool? PossuiFilhos { get; set; }
         public string? Ocupacao { get; set; }
         public string? EmpresaTrabalho { get; set; }
         public string? Categoria { get; set; }
         public string? PoliticamenteExposto { get; set; }
         public string? PresidenteNoBrasil { get; set; }
-        public double RendaBruta { get; set; }
+        public string? RendaBruta { get; set; }
         public string? DespesaMensal { get; set; }
         public string? ObrigacoesFiscaisExterior { get; set; }
         public string? ImpostoDeRenda { get; set; }
@@ -37,7 +37,7 @@ namespace Domain.Model
         public string? QuantidadeSubstancia { get; set; }
         public string? QuantidadeFilhos { get; set; }
         public string? FilhosMaiores { get; set; }
-        public DateTime DataNascimento { get; set; }
+        public DateTime? DataNascimento { get; set; }
         public Sexo? Sexo { get; set; }
         public string? Celular { get; set; }
         public int QuantidadeFilhosMaiores { get; set; }
@@ -51,5 +51,6 @@ namespace Domain.Model
         public string? TomaRemedio { get; set; }
         public string? Fuma { get; set; }
         public string? MaiorPrioridade { get; set; }
+        public int IdUsuarioResponsavel { get; set; }
     }
 }

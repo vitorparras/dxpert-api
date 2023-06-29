@@ -1,6 +1,8 @@
-﻿using Domain.Model;
+﻿using Context.Querys;
+using Domain.Model;
 using Domain.Model.Dados;
 using Microsoft.EntityFrameworkCore;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Context
 {
@@ -22,8 +24,7 @@ namespace Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
-
+            modelBuilder = modelBuilder.ConfigScripts();
         }
 
         public DbSet<Usuario> Usuarios { get; set; }
@@ -38,6 +39,7 @@ namespace Context
         public DbSet<TermLife> TermLife { get; set; }
         public DbSet<TaxaPrevcom> TaxaPrevcom { get; set; }
         public DbSet<SafSuperLuxo> SafSuperLuxo { get; set; }
+        public DbSet<SafSuperLuxoPorIdade> SafSuperLuxoPorIdade { get; set; }
         public DbSet<SafLuxo> SafLuxo { get; set; }
         public DbSet<RendaInvalidez> RendaInvalidez { get; set; }
         public DbSet<PrazoCerto> PrazoCerto { get; set; }
@@ -48,7 +50,7 @@ namespace Context
         public DbSet<InvalidezAcidenteMajorada> InvalidezAcidenteMajorada { get; set; }
         public DbSet<DoencasGravesMaster> DoencasGravesMaster { get; set; }
         public DbSet<DoencasGraves> DoencasGraves { get; set; }
-        public DbSet<DitMedicos> DitMedicos { get; set; }
+        public DbSet<DitMedico> DitMedico { get; set; }
         public DbSet<DiariaInternacaoHospitalar> DiariaInternacaoHospitalar { get; set; }
         public DbSet<DiariaIncapacidadeTemporariaAcidente> DiariaIncapacidadeTemporariaAcidente { get; set; }
         public DbSet<AdicionalDiariaInternacaoHospitalar> AdicionalDiariaInternacaoHospitalar { get; set; }
