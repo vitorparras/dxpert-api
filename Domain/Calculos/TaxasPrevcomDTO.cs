@@ -1,4 +1,4 @@
-﻿namespace Domain.DTO.Calculos
+﻿namespace Domain.Calculos
 {
     public class TaxasPrevcomDTO
     {

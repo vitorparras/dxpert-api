@@ -1,4 +1,4 @@
-﻿using Domain.DTO.Calculos;
+﻿using Domain.Calculos;
 using Domain.Enum;
 using Domain.Model;
 using Domain.Model.Dados;
