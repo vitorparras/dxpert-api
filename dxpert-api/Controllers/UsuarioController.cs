@@ -72,7 +72,7 @@ namespace API.Controllers
             }
         }
 
-         [HttpGet]
+        [HttpGet]
         public async Task<IActionResult> FindByEmail(string email)
         {
             try

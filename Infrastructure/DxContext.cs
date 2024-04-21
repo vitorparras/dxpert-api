@@ -2,7 +2,6 @@
 using Domain.Model.Dados;
 using Infrastructure.Querys;
 using Microsoft.EntityFrameworkCore;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Infrastructure
 {

@@ -1,7 +1,4 @@
-﻿using Domain.DTO.Genericos;
-using Domain.DTO.Response;
-using Microsoft.AspNetCore.Mvc;
-using Service;
+﻿using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
 
 namespace API.Controllers

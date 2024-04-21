@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Service;
-using Service.Calculos;
 using Service.Interfaces;
 using System.Text;
 
@@ -76,7 +75,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IRelatorioService, RelatorioService>();
-builder.Services.AddScoped<ICadastroService , CadastroService>();
+builder.Services.AddScoped<ICadastroService, CadastroService>();
 builder.Services.AddScoped<IConfiguracaoService, ConfiguracaoService>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 

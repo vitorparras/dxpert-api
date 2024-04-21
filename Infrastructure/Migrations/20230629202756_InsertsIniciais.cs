@@ -1,5 +1,4 @@
 ﻿using Domain.Model.Dados;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable

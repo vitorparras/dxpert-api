@@ -4,7 +4,7 @@
     {
         public int Idade { get; set; }
         public double Valor { get; set; }
-        
+
         public static string GetQueryInsertBase() => $@"INSERT INTO MortePorAcidente (Idade, Valor) VALUES
                 ('16',    '0.18'), 
                 ('17',    '0.18'), 

@@ -58,7 +58,7 @@ namespace Service
             return await _CadastroRepository.AddAsync(cadastro);
         }
 
-        public async Task<ApiResponse<IEnumerable<Cadastro>>> List() => 
+        public async Task<ApiResponse<IEnumerable<Cadastro>>> List() =>
             new ApiResponse<IEnumerable<Cadastro>>(false, "Itens Listados Com Sucesso!", await _CadastroRepository.GetAllAsync());
 
         public async Task<ApiResponse<bool>> AddDescendentes(DescendentesRequest desc) =>
