@@ -28,10 +28,10 @@ namespace Service
         {
             try
             {
-                var usuario = await _usuarioService.GetUserByEmail(email);
-                if (usuario.ValidarSenha(senha))
+                var usuario = await _usuarioService.GetByEmailAsync(email);
+                if (usuario.Data.ValidarSenha(senha))
                 {
-                    var token = GenerateJwtToken(usuario);
+                    var token = GenerateJwtToken(usuario.Data);
                     if (token != null)
                     {
                         var adicicionado = await _tokenRepository.AddAsync(new AuthToken
@@ -42,9 +42,9 @@ namespace Service
 
                         return new ApiResponse<LoginResponse>(true, "Usuario Autenticado com sucesso!", new LoginResponse()
                         {
-                            IdUser = usuario.Id,
+                            IdUser = usuario.Data.Id,
                             Token = token,
-                            Nome = usuario.Nome
+                            Nome = usuario.Data.Nome
                         });
                     }
                 }

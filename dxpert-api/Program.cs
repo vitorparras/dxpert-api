@@ -77,7 +77,6 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IRelatorioService, RelatorioService>();
 builder.Services.AddScoped<ICadastroService , CadastroService>();
-builder.Services.AddScoped<ICalculosService, CalculosService>();
 builder.Services.AddScoped<IConfiguracaoService, ConfiguracaoService>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 

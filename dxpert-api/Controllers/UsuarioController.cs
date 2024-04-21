@@ -1,5 +1,4 @@
 ﻿using Domain.DTO.Request;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
 
@@ -20,43 +19,85 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(UsuarioRequest usuario)
         {
-            var response = await _usuarioService.AddAsync(usuario);
-            response.Sucesso = response.Id != null;
-            response.Mensagem = response.Id != null ? "Sucesso" : "Erro";
-            response.Mensagem += " ao Adicionar Usuario ";
-
-            return Ok(response);
+            try
+            {
+                var response = await _usuarioService.AddAsync(usuario);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Ocorreu um erro: {ex.Message}");
+            }
         }
 
         [HttpPut]
         public async Task<IActionResult> Edit(UsuarioRequest usuario)
         {
-            var response = await _usuarioService.UpdateAsync(usuario);
-            response.Sucesso = response.Id != null;
-            response.Mensagem = response.Id != null ? "Sucesso" : "Erro";
-            response.Mensagem += " ao Alterar Usuario ";
-            return Ok(response);
+            try
+            {
+                var response = await _usuarioService.UpdateAsync(usuario);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Ocorreu um erro: {ex.Message}");
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _usuarioService.DeleteAsync(id);
-            return Ok();
+            try
+            {
+                var response = await _usuarioService.DeleteAsync(id);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Ocorreu um erro: {ex.Message}");
+            }
         }
 
         [HttpGet]
-        public async Task<IActionResult> Find(int id)
+        public async Task<IActionResult> FindById(int id)
         {
-            var response = await _usuarioService.GetByIdAsync(id);
-            return Ok(response);
+            try
+            {
+                var response = await _usuarioService.GetByIdAsync(id);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Ocorreu um erro: {ex.Message}");
+            }
+        }
+
+         [HttpGet]
+        public async Task<IActionResult> FindByEmail(string email)
+        {
+            try
+            {
+                var response = await _usuarioService.GetByEmailAsync(email);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Ocorreu um erro: {ex.Message}");
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> List()
         {
-            var response = await _usuarioService.GetAllAsync();
-            return Ok(response);
+            try
+            {
+                var response = await _usuarioService.ListAsync();
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Ocorreu um erro: {ex.Message}");
+            }
         }
     }
 }

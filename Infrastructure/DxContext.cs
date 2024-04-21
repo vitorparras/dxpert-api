@@ -54,6 +54,6 @@ namespace Infrastructure
         public DbSet<DiariaInternacaoHospitalar> DiariaInternacaoHospitalar { get; set; }
         public DbSet<DiariaIncapacidadeTemporariaAcidente> DiariaIncapacidadeTemporariaAcidente { get; set; }
         public DbSet<AdicionalDiariaInternacaoHospitalar> AdicionalDiariaInternacaoHospitalar { get; set; }
-        public DbSet<Configuracoes> Configuracoes { get; set; }
+        public DbSet<Configuracao> Configuracoes { get; set; }
     }
 }

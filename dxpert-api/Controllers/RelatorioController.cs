@@ -1,7 +1,4 @@
-﻿using Domain.DTO.Request;
-using Domain.DTO.Response;
-using Domain.Model;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
 
 namespace API.Controllers

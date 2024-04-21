@@ -1,26 +1,8 @@
-﻿using Domain.Calculos;
-using Domain.Enum;
-using Domain.Model;
-using Domain.Model.Dados;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Repository.Interface;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace Service.Calculos
+﻿namespace Service.Calculos
 {
-    public class CalculosService : ICalculosService
+    public class CalculosService //: ICalculosService
     {
-        public CalculosService(IGenericRepository<DitMedico> ditMedicosRepository,
+       /* public CalculosService(IGenericRepository<DitMedico> ditMedicosRepository,
             IGenericRepository<VidaInteira> vidaInteiraRepository,
             IGenericRepository<Cadastro> cadastroRepository,
             IGenericRepository<InvalidezAcidenteMajorada> invalidezAcidenteMajoradaRepository,
@@ -513,7 +495,7 @@ namespace Service.Calculos
             -66 anos muda
             A partir daí mudará de ano em ano (66, 67, 68, 69, 70.....100
              */
-
+       /*
             int[] limiaresDeIdade = { 18, 36, 41, 46, 51, 56, 61, 66 };
             int ultimoIndiceLimiar = limiaresDeIdade.Length - 1;
 
@@ -695,7 +677,7 @@ namespace Service.Calculos
         }
 
 
-
+        */
 
     }
 }
