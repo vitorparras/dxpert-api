@@ -1,15 +1,16 @@
-using System.Text;
-using Context;
+using API.Middlewares;
+using Infrastructure;
+using Infrastructure.Repository;
+using Infrastructure.Repository.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Middleware;
-using Repository;
-using Repository.Interface;
 using Service;
+using Service.Calculos;
 using Service.Interfaces;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,35 +1,44 @@
-﻿using Domain.Model;
-using Repository.Interface;
+﻿using Domain.DTO.Genericos;
+using Domain.Model;
+using Infrastructure.Repository.Interface;
 using Service.Interfaces;
 
 namespace Service
 {
     public class ConfiguracaoService : IConfiguracaoService
     {
-        private readonly IGenericRepository<Configuracoes> _ConfigRepository;
+        private readonly IGenericRepository<Configuracao> _ConfigRepository;
 
-        public ConfiguracaoService(IGenericRepository<Configuracoes> configRepository)
+        public ConfiguracaoService(IGenericRepository<Configuracao> configRepository)
         {
             _ConfigRepository = configRepository ?? throw new ArgumentNullException(nameof(configRepository));
         }
 
-        public async Task<IEnumerable<Configuracoes>> GetAll()
-        {
-            return await _ConfigRepository.GetAllAsync();
-        }
+        public async Task<ApiResponse<IEnumerable<Configuracao>>> List() =>
+           new ApiResponse<IEnumerable<Configuracao>>(false, "Itens Listados Com Sucesso!", await _ConfigRepository.GetAllAsync());
 
-        public async Task Update(int id, string value)
-        {
-            var configuracao = await _ConfigRepository.FirstOrDefaultAsync(x=>x.Id == id);
 
-            if (configuracao != null)
+        public async Task<ApiResponse<bool>> Update(Configuracao config)
+        {
+            try
             {
-                configuracao.Valor = value;
-                await _ConfigRepository.UpdateAsync(configuracao);
+                ArgumentNullException.ThrowIfNull(config);
+
+                var configuracao = await _ConfigRepository.FirstOrDefaultAsync(x => x.Id == config.Id);
+
+                if (configuracao.Id != 0)
+                {
+                    configuracao.Valor = config.Valor;
+                    configuracao.Nome = config.Nome;
+                    await _ConfigRepository.UpdateAsync(configuracao);
+
+                    return new ApiResponse<bool>(true, "Configuracao Alterado Com Sucesso!", true);
+                }
+                return new ApiResponse<bool>(false, "Configuracao Não Alterada!", false);
             }
-            else
+            catch (Exception ex)
             {
-                throw new ArgumentException("Configuração não encontrada");
+                return new ApiResponse<bool>(false, ex.Message, false);
             }
         }
     }

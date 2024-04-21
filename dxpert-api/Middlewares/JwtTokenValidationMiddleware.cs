@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Infrastructure.Extensions;
 using Service.Interfaces;
 
-namespace Infrastructure
+namespace API.Middlewares
 {
     public class JwtTokenValidationMiddleware
     {
@@ -23,21 +22,21 @@ namespace Infrastructure
                 return;
             }
 
+            var token = context.Request.GetJwtFromHeader();
+
             using var scope = _serviceScopeFactory.CreateScope();
 
-            var usuarioService = scope.ServiceProvider.GetRequiredService<IUsuarioService>();
+            var authService = scope.ServiceProvider.GetRequiredService<IAuthService>();
 
-            var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            var valid = await authService.TokenIsValid(token);
 
-            var valid = await usuarioService.TokenIsValid(token);
-
-            if (string.IsNullOrEmpty(token) || !valid)
+            if (!valid.Success || string.IsNullOrEmpty(token))
             {
                 context.Response.StatusCode = 401;
-                await context.Response.WriteAsync("Unauthorized");
+                await context.Response.WriteAsync("Unauthorized : " + valid.Message);
             }
+
             await _next(context);
         }
     }
-
 }

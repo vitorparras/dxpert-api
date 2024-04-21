@@ -1,10 +1,12 @@
-﻿using Domain.Model;
+﻿using Domain.DTO.Genericos;
+using Domain.Model;
 
 namespace Service.Interfaces
 {
     public interface IConfiguracaoService
     {
-        Task<IEnumerable<Configuracoes>> GetAll();
-        Task Update(int id, string value);
+        Task<ApiResponse<IEnumerable<Configuracao>>> List();
+
+        Task<ApiResponse<bool>> Update(Configuracao configuracao);
     }
 }

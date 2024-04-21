@@ -1,10 +1,8 @@
-﻿using Infrastructure.Interface;
-using Microsoft.Data.SqlClient;
+﻿using Infrastructure.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
-using MySqlConnector;
 using System.Linq.Expressions;
 
-namespace Infrastructure
+namespace Infrastructure.Repository
 {
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
     {
@@ -51,6 +49,23 @@ namespace Infrastructure
         public async Task<TEntity> FromSqlRaw(string sql)
         {
             return await _dbSet.FromSqlRaw(sql).FirstOrDefaultAsync();
+        }
+
+        public TEntity AtualizarPropriedades(TEntity cadastroExistente, TEntity cadastroNovo)
+        {
+            var properties = typeof(TEntity).GetProperties();
+            foreach (var property in properties)
+            {
+                var currentValue = property.GetValue(cadastroExistente);
+                var newValue = property.GetValue(cadastroNovo);
+
+                if (newValue != null && !newValue.Equals(currentValue) && !newValue.Equals(default))
+                {
+                    property.SetValue(cadastroExistente, newValue);
+                }
+            }
+
+            return cadastroExistente;
         }
     }
 }

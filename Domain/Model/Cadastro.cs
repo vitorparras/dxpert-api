@@ -1,4 +1,5 @@
-﻿using Domain.Enum;
+﻿using Domain.DTO.Response;
+using Domain.Enum;
 
 namespace Domain.Model
 {

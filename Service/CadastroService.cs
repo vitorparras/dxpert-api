@@ -1,7 +1,7 @@
-﻿using Domain.DTO.Request;
-using Domain.DTO.Response;
+﻿using Domain.DTO.Genericos;
+using Domain.DTO.Request;
 using Domain.Model;
-using Repository.Interface;
+using Infrastructure.Repository.Interface;
 using Service.Interfaces;
 
 namespace Service
@@ -9,85 +9,59 @@ namespace Service
     public class CadastroService : ICadastroService
     {
         private readonly IGenericRepository<Cadastro> _CadastroRepository;
-        private readonly IGenericRepository<Usuario> _UsuarioRepository;
 
-        public CadastroService(IGenericRepository<Cadastro> cadastroRepository, IGenericRepository<Usuario> usuarioRepository)
+        public CadastroService(IGenericRepository<Cadastro> cadastroRepository)
         {
             _CadastroRepository = cadastroRepository ?? throw new ArgumentNullException(nameof(cadastroRepository));
-            _UsuarioRepository = usuarioRepository ?? throw new ArgumentNullException(nameof(usuarioRepository));
         }
 
-        public async Task<Cadastro> AddOrUpdate(Cadastro cadastro)
+        public async Task<ApiResponse<Cadastro>> AddOrUpdate(Cadastro cadastro)
         {
-            if (cadastro == null) { throw new ArgumentNullException(); }
-
-            if (cadastro.Id != 0)
+            try
             {
-                var cadastroexistente = await _CadastroRepository.FirstOrDefaultAsync(x => x.Id == cadastro.Id) ?? throw new ArgumentNullException();
+                ArgumentNullException.ThrowIfNull(cadastro);
 
-                var alterado = AtualizarPropriedades(cadastroexistente, cadastro);
-
-                var registroSalvo = await _CadastroRepository.UpdateAsync(alterado);
-
-                return registroSalvo;
-            }
-            else
-            {
-                var inserido = await _CadastroRepository.AddAsync(cadastro);
-                return inserido;
-            }
-        }
-
-        private Cadastro AtualizarPropriedades(Cadastro cadastroExistente, Cadastro cadastro)
-        {
-            var properties = typeof(Cadastro).GetProperties();
-            foreach (var property in properties)
-            {
-                var currentValue = property.GetValue(cadastroExistente);
-                var newValue = property.GetValue(cadastro);
-
-                if (newValue != null && !newValue.Equals(currentValue) && !newValue.Equals(default))
+                if (cadastro.Id != 0)
                 {
-                    property.SetValue(cadastroExistente, newValue);
+                    var registroAlterado = await Update(cadastro);
+                    return registroAlterado != null ?
+                        new ApiResponse<Cadastro>(true, "Usuario Alterado Com Sucesso!", cadastro) :
+                        new ApiResponse<Cadastro>(false, "Usuario Não Alterado!", cadastro);
+                }
+                else
+                {
+                    var registroAdicionado = await Add(cadastro);
+                    return registroAdicionado != null ?
+                      new ApiResponse<Cadastro>(true, "Usuario Adicionado Com Sucesso!", cadastro) :
+                      new ApiResponse<Cadastro>(false, "Usuario Não Adicionado!", cadastro);
                 }
             }
-            return cadastroExistente;
-        }
-
-        public async Task<IEnumerable<Cadastro>> List() => await _CadastroRepository.GetAllAsync();
-
-        public async Task<bool> AddDescendentes(DescendentesRequest desc) => true;
-
-        public async Task<IEnumerable<AcompanhamentosResponse>> ListAcompanhamentos(int? idUser)
-        {
-            var response = new List<AcompanhamentosResponse>();
-            IEnumerable<Cadastro>? cads ;
-            if (idUser != null)
+            catch (Exception ex)
             {
-                cads = await _CadastroRepository.FindAsync(x=>x.IdUsuarioResponsavel == idUser);
+                return new ApiResponse<Cadastro>(false, ex.Message, default);
             }
-            else
-            {
-                 cads = await _CadastroRepository.GetAllAsync();
-            }
-
-            response.AddRange(cads.Select(x => new AcompanhamentosResponse()
-            {
-                CadastroEmail = x.Email,
-                CadastroEtapa = x.Etapa,
-                CadastroId = x.Id.ToString(),
-                CadastroTelefone = x.Celular,
-                UserResponsavel = GetNomeUsuarioResponsavel(x.IdUsuarioResponsavel).Result,
-            }));
-
-            return response;
         }
 
-        public async Task<string> GetNomeUsuarioResponsavel(int idUser)
+        public async Task<Cadastro> Update(Cadastro cadastro)
         {
-            var user = await _UsuarioRepository.FirstOrDefaultAsync(x => x.Id == idUser);
-            return user.Nome;
+            var cadastroexistente = await _CadastroRepository.FirstOrDefaultAsync(x => x.Id == cadastro.Id) ?? throw new ArgumentNullException();
+
+            var alterado = _CadastroRepository.AtualizarPropriedades(cadastroexistente, cadastro);
+
+            var registroSalvo = await _CadastroRepository.UpdateAsync(alterado);
+
+            return registroSalvo;
         }
 
+        public async Task<Cadastro> Add(Cadastro cadastro)
+        {
+            return await _CadastroRepository.AddAsync(cadastro);
+        }
+
+        public async Task<ApiResponse<IEnumerable<Cadastro>>> List() => 
+            new ApiResponse<IEnumerable<Cadastro>>(false, "Itens Listados Com Sucesso!", await _CadastroRepository.GetAllAsync());
+
+        public async Task<ApiResponse<bool>> AddDescendentes(DescendentesRequest desc) =>
+            new ApiResponse<bool>(false, "Decendente Adicionado Com Sucesso!", true);
     }
 }

@@ -2,36 +2,44 @@
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
 
-namespace dxpert_api.Controllers
+namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class ConfiguracaoController : ControllerBase
     {
-        private readonly IConfiguracaoService _service;
+        private readonly IConfiguracaoService _configuracaoService;
 
-        public ConfiguracaoController(IConfiguracaoService service)
+        public ConfiguracaoController(IConfiguracaoService configuracaoService)
         {
-            _service = service;
+            _configuracaoService = configuracaoService;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(await _service.GetAll());
+            try
+            {
+                var response = await _configuracaoService.List();
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Ocorreu um erro: {ex.Message}");
+            }
         }
 
         [HttpPut()]
-        public async Task<IActionResult> Update([FromBody] Configuracoes config)
+        public async Task<IActionResult> Update([FromBody] Configuracao config)
         {
             try
             {
-                await _service.Update(config.Id, config.Valor);
-                return Ok();
+                var response = await _configuracaoService.Update(config);
+                return Ok(response);
             }
-            catch (ArgumentException e)
+            catch (Exception ex)
             {
-                return NotFound(e.Message);
+                return StatusCode(500, $"Ocorreu um erro: {ex.Message}");
             }
         }
     }

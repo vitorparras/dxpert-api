@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Domain.DTO.Response
 {
-    public class AcompanhamentosResponse 
+    public class ProgressaoResponse 
     {
         public string? CadastroId { get; set; }
         public string? CadastroEmail { get; set; }

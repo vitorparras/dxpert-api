@@ -4,7 +4,7 @@ using Domain.Model;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
 
-namespace dxpert_api.Controllers
+namespace API.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]

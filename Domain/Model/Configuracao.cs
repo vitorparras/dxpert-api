@@ -1,6 +1,6 @@
 ﻿namespace Domain.Model
 {
-    public class Configuracoes : BaseEntity
+    public class Configuracao : BaseEntity
     {
         public string? Nome { get; set; }
         public string? Tipo { get; set; }

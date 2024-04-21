@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
 
-namespace dxpert_api.Controllers
+namespace API.Controllers
 {
 
     [Route("api/[controller]/[action]")]
@@ -15,28 +15,6 @@ namespace dxpert_api.Controllers
         public UsuarioController(IUsuarioService usuarioService)
         {
             _usuarioService = usuarioService;
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Logout()
-        {
-            if (Request.Headers.TryGetValue("Authorization", out var authorizationHeader))
-            {
-                var token = authorizationHeader.ToString().Replace("Bearer ", string.Empty);
-                await _usuarioService.LogoutAsync(token);
-
-                return NoContent();
-            }
-
-            return BadRequest("Token não encontrado no cabeçalho 'Authorization'.");
-        }
-
-        [HttpPost]
-        [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request)
-        {
-            var response = await _usuarioService.LoginAsync(request.Email, request.Senha);
-            return Ok(response);
         }
 
         [HttpPost]

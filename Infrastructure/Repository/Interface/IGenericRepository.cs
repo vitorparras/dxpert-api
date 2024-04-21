@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace Infrastructure.Interface
+namespace Infrastructure.Repository.Interface
 {
     public interface IGenericRepository<TEntity> where TEntity : class
     {
@@ -12,7 +12,7 @@ namespace Infrastructure.Interface
         Task<TEntity> UpdateAsync(TEntity entity);
         Task RemoveAsync(TEntity entity);
         Task<int> SaveChangesAsync();
-
         Task<TEntity> FromSqlRaw(string sql);
+        TEntity AtualizarPropriedades(TEntity cadastroExistente, TEntity cadastroNovo);
     }
 }

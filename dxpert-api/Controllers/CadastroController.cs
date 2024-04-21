@@ -1,10 +1,9 @@
 ﻿using Domain.DTO.Request;
-using Domain.DTO.Response;
 using Domain.Model;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
 
-namespace dxpert_api.Controllers
+namespace API.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
@@ -20,51 +19,43 @@ namespace dxpert_api.Controllers
         [HttpPut]
         public async Task<IActionResult> AddOrUpdate(Cadastro cadastro)
         {
-            var data = await _cadastroService.AddOrUpdate(cadastro);
-            var mensagem = data.Id != default ? "Sucesso" : "Erro";
-            mensagem += " ao atualiziar/inserir o cadastro";
-            return Ok(new CadastroResponse()
+            try
             {
-                Cadastro = data,
-                Mensagem = mensagem,
-                Sucesso = data.Id != default
-            });
+                var response = await _cadastroService.AddOrUpdate(cadastro);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Ocorreu um erro: {ex.Message}");
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> AddDescendentes(DescendentesRequest req)
         {
-            var data = await _cadastroService.AddDescendentes(req);
-            var mensagem = data ? "Sucesso" : "Erro";
-            mensagem += " ao atualiziar/inserir o cadastro";
-            return Ok(new CadastroResponse()
+            try
             {
-                Cadastro = null,
-                Mensagem = mensagem,
-                Sucesso = data
-            });
+                var response = await _cadastroService.AddDescendentes(req);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Ocorreu um erro: {ex.Message}");
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> List()
         {
-            var data = await _cadastroService.List();
-            var mensagem = data != null ? "Sucesso" : "Erro";
-            mensagem += " ao atualiziar/inserir o cadastro";
-            return Ok(new CadastroListResponse()
+            try
             {
-                Cadastros = data,
-                Mensagem = mensagem,
-                Sucesso = true
-            });
-        } 
-        
-        
-        [HttpGet]
-        public async Task<IActionResult> Acompanhamentos(int? idUser)
-        {
-            var data = await _cadastroService.ListAcompanhamentos(idUser);
-            return Ok(data);
+                var response = await _cadastroService.List();
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Ocorreu um erro: {ex.Message}");
+            }
         }
     }
 }

@@ -15,5 +15,11 @@ namespace Domain.Model
 
         [Required]
         public string? Senha { get; set; }
+
+
+        public bool ValidarSenha(string senha)
+        {
+            return string.IsNullOrEmpty(senha) || !Senha.Equals(senha);
+        }
     }
 }

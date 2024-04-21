@@ -1,15 +1,15 @@
-﻿using Domain.DTO.Request;
-using Domain.DTO.Response;
+﻿using Domain.DTO.Genericos;
+using Domain.DTO.Request;
 using Domain.Model;
-using System.Collections.Generic;
 
 namespace Service.Interfaces
 {
     public interface ICadastroService
     {
-        Task<Cadastro> AddOrUpdate(Cadastro cadastro);
-        Task<IEnumerable<Cadastro>> List();
-        Task<IEnumerable<AcompanhamentosResponse>> ListAcompanhamentos(int? idUser);
-        Task<bool> AddDescendentes(DescendentesRequest desc);
+        Task<ApiResponse<Cadastro>> AddOrUpdate(Cadastro cadastro);
+
+        Task<ApiResponse<IEnumerable<Cadastro>>> List();
+
+        Task<ApiResponse<bool>> AddDescendentes(DescendentesRequest desc);
     }
 }
