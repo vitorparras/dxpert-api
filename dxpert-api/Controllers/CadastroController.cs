@@ -35,7 +35,6 @@ namespace dxpert_api.Controllers
         public async Task<IActionResult> AddDescendentes(DescendentesRequest req)
         {
             var data = await _cadastroService.AddDescendentes(req);
-            
             var mensagem = data ? "Sucesso" : "Erro";
             mensagem += " ao atualiziar/inserir o cadastro";
             return Ok(new CadastroResponse()

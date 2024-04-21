@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Service.Interfaces;
-using static System.Formats.Asn1.AsnWriter;
 
-namespace Middleware
+namespace Infrastructure
 {
     public class JwtTokenValidationMiddleware
     {
