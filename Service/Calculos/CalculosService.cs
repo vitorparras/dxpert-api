@@ -1,6 +1,9 @@
-﻿namespace Service.Calculos
+﻿using Domain.Calculos;
+using Domain.Model;
+
+namespace Service.Calculos
 {
-    public class CalculosService //: ICalculosService
+    public class CalculosService : ICalculosService
     {
         /* public CalculosService(IGenericRepository<DitMedico> ditMedicosRepository,
              IGenericRepository<VidaInteira> vidaInteiraRepository,
@@ -678,6 +681,84 @@
 
 
          */
+        public double CalcularBeneficioInvalidez(Cadastro cadastro, double RendaHoje)
+        {
+            throw new NotImplementedException();
+        }
 
+        public int CalcularDoencasGraves(int idade, int idadeMinimaAposentar)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int CalcularIdade(DateTime dataDeNascimento)
+        {
+            throw new NotImplementedException();
+        }
+
+        public double CalcularInvalidezMorte(int idade, double valor, string tipo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public double CalcularPensaoPorMorte(Cadastro cadastro, double RendaHoje, double BeneficioInvalidez)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<double> CalcularPersonalizacao(Cadastro cadastro, string produto, int idade, int termLife)
+        {
+            throw new NotImplementedException();
+        }
+
+        public (int idade, double valor)? CalcularProximaIdade(int idade, double beneficioPorMorte, double beneficioPorInvalidez)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string CalcularReceberPor(DateTime dataNascConjuge)
+        {
+            throw new NotImplementedException();
+        }
+
+        public double CalcularRegimeContratacao(Cadastro cadastro, double RendaHoje)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<double> CalcularSugestaoDeProdutos(Cadastro cadastro, string descricao, int idade, double NaPensaoPorMorte, double NaInvalidez, int IdadeMinimaAposentar, int TempoContribuicao)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int CalcularTempoContribuicao(Cadastro cadastro)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<double> CalcularTermLife(int tempoContribuicao, int idade, Cadastro cadastro)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<double> RecuperarDidMedico(int idade, double rendaMensalContratar)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<Dictionary<string, string>>> RecuperarInformacoesProduto(List<Dictionary<string, string>> dados, List<Dictionary<string, string>> produtos, int termLife, int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public double RecuperarSeguro(int idade, double valorMorte, double valorInvalidez)
+        {
+            throw new NotImplementedException();
+        }
+
+        public TaxasPrevcomDTO RecuperarTaxasPrevcom(int idade)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -6,7 +6,7 @@ using Service.Interfaces;
 
 namespace Service
 {
-    internal class ProgressaoService : IProgressaoService
+    public class ProgressaoService : IProgressaoService
     {
         private readonly IGenericRepository<Cadastro> _CadastroRepository;
         private readonly IGenericRepository<Usuario> _usuarioRepository;
