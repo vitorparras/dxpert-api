@@ -4,6 +4,7 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Context.Migrations
 {
     [DbContext(typeof(DxContext))]
-    partial class DxContextModelSnapshot : ModelSnapshot
+    [Migration("20240421223358_AlteracoesDid")]
+    partial class AlteracoesDid
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -335,49 +338,38 @@ namespace Context.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlComputedColumn(b.Property<DateTime>("DataCriacao"));
 
-                    b.Property<string>("I13a30")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("I13a30")
+                        .HasColumnType("double");
 
-                    b.Property<string>("I31a35")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("I31a35")
+                        .HasColumnType("double");
 
-                    b.Property<string>("I36a40")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("I36a40")
+                        .HasColumnType("double");
 
-                    b.Property<string>("I41a45")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("I41a45")
+                        .HasColumnType("double");
 
-                    b.Property<string>("I46a50")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("I46a50")
+                        .HasColumnType("double");
 
-                    b.Property<string>("I51a55")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("I51a55")
+                        .HasColumnType("double");
 
-                    b.Property<string>("I56a60")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("I56a60")
+                        .HasColumnType("double");
 
-                    b.Property<string>("I61a65")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("I61a65")
+                        .HasColumnType("double");
 
-                    b.Property<string>("InvalidezAcidentalMajorada")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("InvalidezAcidentalMajorada")
+                        .HasColumnType("double");
 
-                    b.Property<string>("MorteAcidental")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("MorteAcidental")
+                        .HasColumnType("double");
 
-                    b.Property<string>("RendaMensal")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("RendaMensal")
+                        .HasColumnType("double");
 
                     b.HasKey("Id");
 

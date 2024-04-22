@@ -4,6 +4,7 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Context.Migrations
 {
     [DbContext(typeof(DxContext))]
-    partial class DxContextModelSnapshot : ModelSnapshot
+    [Migration("20240421223151_Alteracoes")]
+    partial class Alteracoes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -335,49 +338,38 @@ namespace Context.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlComputedColumn(b.Property<DateTime>("DataCriacao"));
 
-                    b.Property<string>("I13a30")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("I13a30")
+                        .HasColumnType("double");
 
-                    b.Property<string>("I31a35")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("I31a35")
+                        .HasColumnType("double");
 
-                    b.Property<string>("I36a40")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("I36a40")
+                        .HasColumnType("double");
 
-                    b.Property<string>("I41a45")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("I41a45")
+                        .HasColumnType("double");
 
-                    b.Property<string>("I46a50")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("I46a50")
+                        .HasColumnType("double");
 
-                    b.Property<string>("I51a55")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("I51a55")
+                        .HasColumnType("double");
 
-                    b.Property<string>("I56a60")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("I56a60")
+                        .HasColumnType("double");
 
-                    b.Property<string>("I61a65")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("I61a65")
+                        .HasColumnType("double");
 
-                    b.Property<string>("InvalidezAcidentalMajorada")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("InvalidezAcidentalMajorada")
+                        .HasColumnType("double");
 
-                    b.Property<string>("MorteAcidental")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("MorteAcidental")
+                        .HasColumnType("double");
 
-                    b.Property<string>("RendaMensal")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("RendaMensal")
+                        .HasColumnType("double");
 
                     b.HasKey("Id");
 
@@ -442,125 +434,95 @@ namespace Context.Migrations
                     b.Property<int>("Idade")
                         .HasColumnType("int");
 
-                    b.Property<string>("V1")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("V1")
+                        .HasColumnType("double");
 
-                    b.Property<string>("V10")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("V10")
+                        .HasColumnType("double");
 
-                    b.Property<string>("V11")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("V11")
+                        .HasColumnType("double");
 
-                    b.Property<string>("V12")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("V12")
+                        .HasColumnType("double");
 
-                    b.Property<string>("V13")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("V13")
+                        .HasColumnType("double");
 
-                    b.Property<string>("V14")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("V14")
+                        .HasColumnType("double");
 
-                    b.Property<string>("V15")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("V15")
+                        .HasColumnType("double");
 
-                    b.Property<string>("V16")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("V16")
+                        .HasColumnType("double");
 
-                    b.Property<string>("V17")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("V17")
+                        .HasColumnType("double");
 
-                    b.Property<string>("V18")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("V18")
+                        .HasColumnType("double");
 
-                    b.Property<string>("V19")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("V19")
+                        .HasColumnType("double");
 
-                    b.Property<string>("V2")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("V2")
+                        .HasColumnType("double");
 
-                    b.Property<string>("V20")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("V20")
+                        .HasColumnType("double");
 
-                    b.Property<string>("V21")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("V21")
+                        .HasColumnType("double");
 
-                    b.Property<string>("V22")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("V22")
+                        .HasColumnType("double");
 
-                    b.Property<string>("V23")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("V23")
+                        .HasColumnType("double");
 
-                    b.Property<string>("V24")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("V24")
+                        .HasColumnType("double");
 
-                    b.Property<string>("V25")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("V25")
+                        .HasColumnType("double");
 
-                    b.Property<string>("V26")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("V26")
+                        .HasColumnType("double");
 
-                    b.Property<string>("V27")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("V27")
+                        .HasColumnType("double");
 
-                    b.Property<string>("V28")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("V28")
+                        .HasColumnType("double");
 
-                    b.Property<string>("V29")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("V29")
+                        .HasColumnType("double");
 
-                    b.Property<string>("V3")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("V3")
+                        .HasColumnType("double");
 
-                    b.Property<string>("V30")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("V30")
+                        .HasColumnType("double");
 
-                    b.Property<string>("V4")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("V4")
+                        .HasColumnType("double");
 
-                    b.Property<string>("V5")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("V5")
+                        .HasColumnType("double");
 
-                    b.Property<string>("V6")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("V6")
+                        .HasColumnType("double");
 
-                    b.Property<string>("V7")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("V7")
+                        .HasColumnType("double");
 
-                    b.Property<string>("V8")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("V8")
+                        .HasColumnType("double");
 
-                    b.Property<string>("V9")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("V9")
+                        .HasColumnType("double");
 
                     b.HasKey("Id");
 

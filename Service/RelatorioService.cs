@@ -30,24 +30,20 @@ namespace Service
             var rendalimpa = cadastro.RendaBruta.Replace("R$ ", "");
             _ = double.TryParse(rendalimpa, out var rendaHoje);
 
-
             var idadeMinimaAposentar = cadastro.Sexo == Sexo.Masculino ? 65 : 62;
             var idade = CalcularIdade(cadastro?.DataNascimento ?? DateTime.MinValue);
             var meAposentoAos = (idade + cadastro.AnosContribuicao) <= idadeMinimaAposentar ? idadeMinimaAposentar : (idade + cadastro.AnosContribuicao);
             var aposentadoria = aposentado ? 0 : _calculosService.CalcularRegimeContratacao(cadastro, rendaHoje);
 
-
             var beneficioInvalidez = aposentado ? 0 : _calculosService.CalcularBeneficioInvalidez(cadastro, rendaHoje);
             var pensaoPorMorte = aposentado ? 0 : _calculosService.CalcularPensaoPorMorte(cadastro, rendaHoje, beneficioInvalidez);
             var receberaPor = pensaoPorMorte == 0 || cadastro.ConjugeDataNasc == null ? "0" : _calculosService.CalcularReceberPor(cadastro.ConjugeDataNasc ?? DateTime.MaxValue);
-
 
             var minhasPercasNaAposentadoria = aposentado ? 0 : rendaHoje - aposentadoria;
             var minhasPercasNaInvalidez = aposentado ? 0 : rendaHoje - beneficioInvalidez;
             var minhasPercasNaPensaoPorMorte = rendaHoje - pensaoPorMorte;
 
             #region produtosSugestaoParaRecuperar
-
 
             var seguroDeVida = CalcularValorDoSeguro(aposentado, rendaHoje, idade, minhasPercasNaPensaoPorMorte);
             var invalidezMajorada = CalcularValorInvalidez(aposentado, rendaHoje, idade, minhasPercasNaInvalidez);
@@ -81,9 +77,6 @@ namespace Service
 
             #endregion
 
-
-
-
             var relatorio = new Relatorio
             {
                 Nome = cadastro.Nome,
@@ -104,19 +97,12 @@ namespace Service
                 NaPensaoPorMorte = minhasPercasNaPensaoPorMorte.ToString(),
                 NaAposentadoria = minhasPercasNaAposentadoria.ToString(),
 
-
                 ProdutosSugestaoParaRecuperar = produtosSugestaoParaRecuperar,
-
-
             };
             return relatorio;
         }
 
-
-
-
         // OUTROS METODOS
-
 
         public int CalcularIdade(DateTime dataNascimento)
         {
@@ -126,7 +112,6 @@ namespace Service
 
             return idade;
         }
-
 
         private double CalcularValorDoSeguro(bool aposentado, double rendaHoje, int idade, double minhasPercasNaPensaoPorMorte)
         {
@@ -148,17 +133,5 @@ namespace Service
                 ? "PENSÃO POR MORTE"
                 : (idade <= 50 ? "TERM LIFE" : "SEGURO DE VIDA");
         }
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }
