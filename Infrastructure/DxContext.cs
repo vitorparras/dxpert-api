@@ -12,7 +12,7 @@ namespace Infrastructure
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var conexao = "Server=localhost;Port=3333;User Id=root;Password=root;Database=DXPERTDB";
+                var conexao = "Server=localhost;Port=3333;User Id=root;Password=root;Database=DXPERT_BANCO";
                 optionsBuilder
                   .UseMySql(conexao, ServerVersion.AutoDetect(conexao))
                   .EnableSensitiveDataLogging();
@@ -21,8 +21,6 @@ namespace Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-
             AdicionalDiariaInternacaoHospitalar.InsertData(modelBuilder);
             DiariaIncapacidadeTemporariaAcidente.InsertData(modelBuilder);
             DiariaInternacaoHospitalar.InsertData(modelBuilder);
@@ -43,6 +41,8 @@ namespace Infrastructure
             TermLife.InsertData(modelBuilder);
             VidaInteira.InsertData(modelBuilder);
             VidaInteiraConjuge.InsertData(modelBuilder);
+
+            base.OnModelCreating(modelBuilder);
         }
 
         #region Sistema

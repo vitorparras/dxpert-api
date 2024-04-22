@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.Model.Bases;
+using Microsoft.EntityFrameworkCore;
 
 namespace Domain.Model.Calculos
 {

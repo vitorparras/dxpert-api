@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.Model.Bases;
+using Microsoft.EntityFrameworkCore;
 using System.Reflection.Emit;
 
 namespace Domain.Model.Calculos

@@ -1,4 +1,6 @@
-﻿namespace Domain.Model
+﻿using Domain.Model.Bases;
+
+namespace Domain.Model
 {
     public class AuthToken : BaseEntity
     {

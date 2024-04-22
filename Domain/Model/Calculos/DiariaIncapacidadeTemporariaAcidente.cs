@@ -1,9 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.Model.Bases;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Model.Calculos
 {
     public class DiariaIncapacidadeTemporariaAcidente : BaseEntity
     {
+        [Key]
         public double RendaMensal { get; set; }
         public double MorteAcidental { get; set; }
         public double InvalidezAcidentalMajorada { get; set; }
